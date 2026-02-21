@@ -1,0 +1,7 @@
+vendor/
+database/database.sqlite
+database/database.sqlite-shm
+database/database.sqlite-wal
+.phpunit.result.cache
+.env
+.claude/

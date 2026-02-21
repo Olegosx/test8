@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Перенаправляем всё (включая запросы к директориям) в public/index.php,
+# кроме реально существующих файлов (css, js, картинки и т.д.)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ public/index.php [QSA,L]

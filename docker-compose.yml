@@ -1,0 +1,10 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8083:8083"
+    volumes:
+      - db-data:/app/database
+
+volumes:
+  db-data:

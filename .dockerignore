@@ -1,0 +1,9 @@
+vendor/
+database/database.sqlite
+database/database.sqlite-shm
+database/database.sqlite-wal
+.git/
+.claude/
+*.md
+tests/
+.phpunit.result.cache
