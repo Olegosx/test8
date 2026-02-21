@@ -10,7 +10,7 @@
 docker compose up
 ```
 
-Приложение доступно по адресу: **http://localhost:8080**
+Приложение доступно по адресу: **http://localhost:8083**
 
 ### Вариант B: Без Docker
 
@@ -18,10 +18,26 @@ docker compose up
 composer install
 php database/migrations/migrate.php
 php database/seeds/seed.php
-php -S localhost:8080 -t public/
+php -S localhost:8083 -t public/ public/index.php
 ```
 
-Откройте **http://localhost:8080**
+Откройте **http://localhost:8083**
+
+### Вариант C: Shared-хостинг (Apache)
+
+1. Распаковать архив в нужный каталог на сервере (например, `test8/`).
+2. Дать права на запись директории с базой данных:
+   ```bash
+   chmod 777 database/
+   ```
+3. Инициализировать БД через SSH:
+   ```bash
+   php database/migrations/migrate.php
+   php database/seeds/seed.php
+   ```
+4. Убедиться, что на хостинге включён `mod_rewrite` и `.htaccess` обрабатывается (`AllowOverride All`).
+
+Приложение доступно по адресу вида **http://example.com/test8/**
 
 ## Тестовые пользователи
 
@@ -44,7 +60,7 @@ php -S localhost:8080 -t public/
 ### Автоматически (скрипт)
 
 ```bash
-bash race_test.sh http://localhost:8080 2
+bash race_test.sh http://localhost:8083 2
 ```
 
 Скрипт отправляет два параллельных запроса на взятие заявки #2 (статус `assigned`).
@@ -54,17 +70,17 @@ bash race_test.sh http://localhost:8080 2
 
 **Терминал 1** — авторизуемся и берём заявку:
 ```bash
-curl -c /tmp/s1.txt -b /tmp/s1.txt -X POST http://localhost:8080/login \
+curl -c /tmp/s1.txt -b /tmp/s1.txt -X POST http://localhost:8083/login \
      -d "username=master1&password=master1" -L -o /dev/null -s
-curl -c /tmp/s1.txt -b /tmp/s1.txt -X POST http://localhost:8080/master/requests/2/take \
+curl -c /tmp/s1.txt -b /tmp/s1.txt -X POST http://localhost:8083/master/requests/2/take \
      -v -s 2>&1 | grep "< HTTP"
 ```
 
 **Терминал 2** — одновременно:
 ```bash
-curl -c /tmp/s2.txt -b /tmp/s2.txt -X POST http://localhost:8080/login \
+curl -c /tmp/s2.txt -b /tmp/s2.txt -X POST http://localhost:8083/login \
      -d "username=master1&password=master1" -L -o /dev/null -s
-curl -c /tmp/s2.txt -b /tmp/s2.txt -X POST http://localhost:8080/master/requests/2/take \
+curl -c /tmp/s2.txt -b /tmp/s2.txt -X POST http://localhost:8083/master/requests/2/take \
      -v -s 2>&1 | grep "< HTTP"
 ```
 
